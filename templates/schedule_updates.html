@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Schedule Updates</h2>
+
+<div class="card">
+  <h3>{% if session.role == 'Admin' %}Update Schedule{% else %}Request Schedule Update{% endif %}</h3>
+
+  <form method="POST" class="grid">
+    <div>
+      <label>Schedule</label>
+      <select name="daily_id" required>
+        {% for d in assigned_daily %}
+        <option value="{{d.daily_id}}">
+          #{{d.daily_id}} - {{d.route_name}} - {{d.collection_date}} - {{d.time_slot}}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if session.role == 'Admin' %}
+    <div>
+      <label>New Collection Date</label>
+      <input type="date" name="new_collection_date" min="{{ today }}">
+    </div>
+    {% endif %}
+
+    <div>
+      <label>New Time Slot</label>
+      <input name="new_time_slot" required placeholder="Example: 02:00 PM - 04:00 PM">
+    </div>
+
+    <div style="grid-column:1/-1">
+      <label>Update Reason</label>
+      <textarea name="update_reason" rows="3" required placeholder="Explain why the schedule needs to be updated"></textarea>
+    </div>
+
+    <div style="grid-column:1/-1">
+      <label>Remarks</label>
+      <textarea name="remarks" rows="2" placeholder="Optional remarks"></textarea>
+    </div>
+
+    <div>
+      <button>{% if session.role == 'Admin' %}Update Schedule{% else %}Submit Request{% endif %}</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Schedule Update History</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Update ID</th>
+        <th>Daily ID</th>
+        <th>Collection Date</th>
+        <th>Current Time</th>
+        <th>Route</th>
+        <th>Updated By</th>
+        <th>Reason</th>
+        <th>Requested Date</th>
+        <th>New Time Slot</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for u in updates %}
+      <tr>
+        <td>{{u.update_id}}</td>
+        <td>{{u.daily_id}}</td>
+        <td>{{u.collection_date}}</td>
+        <td>{{u.current_time_slot}}</td>
+        <td>{{u.route_name}}</td>
+        <td>{{u.updated_by}} ({{u.staff_type}})</td>
+        <td>{{u.update_reason}}</td>
+        <td>{{u.update_date}}</td>
+        <td>{{u.new_time_slot}}</td>
+        <td>{{u.remarks}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

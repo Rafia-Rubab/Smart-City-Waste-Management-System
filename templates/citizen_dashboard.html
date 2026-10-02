@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Citizen Complaint Portal</h2>
+
+<div class="card">
+  <h3>Submit New Complaint</h3>
+
+  <form method="POST" class="grid">
+    <div>
+      <label>Your Full Name</label>
+      <input
+        type="text"
+        name="full_name"
+        value="{{ citizen.full_name or '' }}"
+        required
+        placeholder="Enter your full name">
+    </div>
+
+    <div>
+      <label>Phone Number</label>
+      <input
+        type="text"
+        name="phone"
+        value="{{ citizen.phone or '' }}"
+        required
+        placeholder="Example: 03001234567">
+    </div>
+
+    <div>
+      <label>Address</label>
+      <input
+        type="text"
+        name="address"
+        value="{{ citizen.address or '' }}"
+        required
+        placeholder="Enter your home address">
+    </div>
+
+    <div>
+      <label>Area</label>
+      <select name="area_id" required>
+        <option value="">Select Area</option>
+        {% for a in areas %}
+          <option value="{{ a.area_id }}"
+            {% if citizen.area_id == a.area_id %}selected{% endif %}>
+            {{ a.area_name }}{% if a.city_zone %} - {{ a.city_zone }}{% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>Exact Complaint Location</label>
+      <input
+        type="text"
+        name="location"
+        required
+        placeholder="Example: Street 5, Near Main Market">
+    </div>
+
+    <div>
+      <label>Complaint Type</label>
+      <select name="complaint_type" required>
+        <option value="">Select Complaint Type</option>
+        <option value="Missed Collection">Missed Collection</option>
+        <option value="Overflowing Bin">Overflowing Bin</option>
+        <option value="Illegal Dumping">Illegal Dumping</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Priority</label>
+      <select name="priority" required>
+        <option value="Low">Low</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="High">High</option>
+      </select>
+    </div>
+
+    <div style="grid-column:1/-1">
+      <label>Description</label>
+      <textarea
+        name="description"
+        rows="4"
+        required
+        placeholder="Describe your complaint clearly"></textarea>
+    </div>
+
+    <div>
+      <button>Submit Complaint</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>My Complaint History</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Citizen Name</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Area</th>
+        <th>Location</th>
+        <th>Type</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for c in complaints %}
+      <tr>
+        <td>{{ c.complaint_id }}</td>
+        <td>{{ c.full_name }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.address }}</td>
+        <td>{{ c.area_name }}</td>
+        <td>{{ c.location }}</td>
+        <td>{{ c.complaint_type }}</td>
+        <td><span class="badge {{ c.priority|lower }}">{{ c.priority }}</span></td>
+        <td><span class="badge {{ c.status|lower|replace(' ', '-') }}">{{ c.status }}</span></td>
+        <td>{{ c.complaint_date }}</td>
+        <td>{{ c.description }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login - Smart City Waste Management</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; background:#eef5f9; }
+.login-card { width:360px; background:white; padding:28px; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,0.10); }
+h2 { color:#1a5276; margin-bottom:8px; text-align:center; }
+p { color:#666; font-size:13px; text-align:center; margin-bottom:22px; }
+label { display:block; margin-top:12px; font-size:13px; color:#333; font-weight:bold; }
+input { width:100%; padding:11px; margin-top:6px; border:1px solid #ccc; border-radius:8px; font-size:14px; }
+button { width:100%; margin-top:20px; padding:12px; border:0; border-radius:8px; background:#1a5276; color:white; font-weight:bold; cursor:pointer; }
+.error { background:#fde8e8; color:#c0392b; padding:10px; border-radius:8px; font-size:13px; margin-bottom:12px; text-align:center; }
+</style>
+</head>
+<body>
+  <div class="login-card">
+    <h2>Smart City Waste</h2>
+    <p>Login to continue</p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="error">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <label>Username</label>
+      <input type="text" name="username" required autofocus>
+      <label>Password</label>
+      <input type="password" name="password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>

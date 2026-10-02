@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Route Management</h2>
+
+<div class="card">
+  <h3>Add New Route</h3>
+
+  <form method="POST" class="grid">
+    <div>
+      <label>Route Name</label>
+      <input type="text" name="route_name" required placeholder="Example: Route A">
+    </div>
+
+    <div>
+      <label>Areas Covered</label>
+      <textarea name="areas_covered" rows="3" required placeholder="Example: Taxila City, Main Market, Station Road"></textarea>
+    </div>
+
+    <div>
+      <label>Distance (KM)</label>
+      <input type="number" step="0.01" min="0" name="distance_km" required placeholder="Example: 8.5">
+    </div>
+
+    <div>
+      <label>Estimated Time (Hours)</label>
+      <input type="number" step="0.01" min="0" name="est_time_hr" required placeholder="Example: 1.25">
+    </div>
+
+    <div>
+      <label>Traffic Level</label>
+      <select name="traffic_level" required>
+        <option value="">Select traffic level</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Fuel Cost</label>
+      <input type="number" step="0.01" min="0" name="fuel_cost" required placeholder="Example: 2500">
+    </div>
+
+    <div style="padding-top:28px;">
+      <button>Add Route</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>All Routes</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Route ID</th>
+        <th>Route Name</th>
+        <th>Areas Covered</th>
+        <th>Distance (KM)</th>
+        <th>Estimated Time</th>
+        <th>Traffic Level</th>
+        <th>Fuel Cost</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in routes %}
+      <tr>
+        <td>{{ r.route_id }}</td>
+        <td>{{ r.route_name }}</td>
+        <td>{{ r.areas_covered }}</td>
+        <td>{{ r.distance_km }}</td>
+        <td>{{ r.est_time_hr }}</td>
+        <td>{{ r.traffic_level }}</td>
+        <td>{{ r.fuel_cost }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

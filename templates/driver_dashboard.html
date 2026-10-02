@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block content %}
+<h2>Driver Dashboard</h2>
+<div class="grid">
+  <div class="card"><h3>Driver Profile</h3><p><b>Name:</b> {{profile.full_name}}</p><p><b>License Number:</b> {{profile.license_number or 'Not set'}}</p><p><b>Contact:</b> {{profile.contact}}</p></div>
+  <div class="card"><h3>Assigned Vehicle</h3><p><b>Vehicle:</b> {{profile.vehicle_type or 'No vehicle assigned'}}</p><p><b>Capacity:</b> {{profile.vehicle_capacity or '-'}}</p><p><b>Fuel:</b> {{profile.fuel_type or '-'}}</p><p><b>Status:</b> {{profile.vehicle_status or '-'}}</p></div>
+</div>
+<div class="card"><h3>My Driving Routes and Schedules</h3><table><thead><tr><th>Daily ID</th><th>Date</th><th>Time</th><th>Route</th><th>Areas Covered</th><th>Distance KM</th><th>Estimated Time</th><th>Traffic</th><th>Status</th><th>Update</th></tr></thead><tbody>{% for t in tasks %}<tr><td>{{t.daily_id}}</td><td>{{t.collection_date}}</td><td>{{t.time_slot}}</td><td>{{t.route_name}}</td><td>{{t.areas_covered}}</td><td>{{t.distance_km}}</td><td>{{t.est_time_hr}}</td><td>{{t.traffic_level}}</td><td><span class="badge {{t.status|lower}}">{{t.status}}</span></td><td><form method="POST" action="/worker/tasks/{{t.daily_id}}/status"><select name="status" style="width:auto"><option {% if t.status=='Pending' %}selected{% endif %}>Pending</option><option {% if t.status=='Completed' %}selected{% endif %}>Completed</option><option {% if t.status=='Cancelled' %}selected{% endif %}>Cancelled</option></select><button>Save</button></form></td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Schedule Management</h2>
+
+<div class="card">
+  <h3>Create Collection Schedule</h3>
+
+  <form method="POST" class="grid">
+    <div>
+      <label>Route</label>
+      <select name="route_id" required>
+        {% for r in routes %}
+        <option value="{{r.route_id}}">{{r.route_name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>Frequency</label>
+      <select name="frequency" required>
+        <option>Daily</option>
+        <option>Weekly</option>
+        <option>Bi-Weekly</option>
+        <option>Monthly</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Waste Type</label>
+      <select name="waste_type" required>
+        <option>Organic</option>
+        <option>Plastic</option>
+        <option>Hazardous</option>
+        <option>All</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Schedule Type</label>
+      <select name="schedule_type" required>
+        <option>Regular</option>
+        <option>Emergency</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Collection Date</label>
+      <input type="date" name="collection_date" min="{{ today }}" required>
+    </div>
+
+    <div>
+      <label>Time Slot</label>
+      <input name="time_slot" placeholder="09:00 AM - 11:00 AM" required>
+    </div>
+
+    <div>
+      <label>Assign Staff</label>
+      <select name="staff_id">
+        <option value="">Not Assigned</option>
+        {% for s in staff %}
+        <option value="{{s.staff_id}}">{{s.full_name}} ({{s.staff_type}})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <button>Create Schedule</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Daily ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Route</th>
+        <th>Frequency</th>
+        <th>Type</th>
+        <th>Waste</th>
+        <th>Status</th>
+        <th>Update Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for s in schedules %}
+      <tr>
+        <td>{{s.daily_id}}</td>
+        <td>{{s.collection_date}}</td>
+        <td>{{s.time_slot}}</td>
+        <td>{{s.route_name}}</td>
+        <td>{{s.frequency}}</td>
+        <td>{{s.schedule_type}}</td>
+        <td>{{s.waste_type}}</td>
+        <td><span class="badge {{s.status|lower}}">{{s.status}}</span></td>
+        <td>
+          <form method="POST" action="/schedules/{{s.daily_id}}/status">
+            <select name="status" style="width:auto">
+              <option {% if s.status=='Pending' %}selected{% endif %}>Pending</option>
+              <option {% if s.status=='Completed' %}selected{% endif %}>Completed</option>
+              <option {% if s.status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+            <button>Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

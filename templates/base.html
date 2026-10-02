@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Smart City Waste Management</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+    body{background:#f5f7fa;color:#222}
+    nav{background:#1a5276;padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    nav a{color:white;text-decoration:none;font-size:14px;padding:7px 10px;border-radius:6px}
+    nav a:hover{background:rgba(255,255,255,.2)}
+    .logo{color:white;font-weight:bold;margin-right:12px}
+    .role-pill{color:white;background:rgba(255,255,255,.18);padding:6px 10px;border-radius:20px;font-size:12px;margin-left:auto}
+    .container{max-width:1200px;margin:24px auto;padding:0 16px}
+    .card{background:white;border-radius:10px;padding:20px;margin-bottom:16px;border:1px solid #e0e0e0}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+    .stat{background:white;border-radius:10px;padding:18px;text-align:center;border:1px solid #e0e0e0}
+    .num{font-size:30px;font-weight:bold;color:#1a5276}
+    .lbl{font-size:13px;color:#666;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{background:#f0f4f8;padding:10px;text-align:left;border-bottom:1px solid #e0e0e0}
+    td{padding:10px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+    h2{font-size:22px;color:#1a5276;margin-bottom:16px}
+    h3{font-size:16px;margin-bottom:12px}
+    input,select,textarea{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font-size:14px;margin-top:5px}
+    label{display:block;margin-top:10px;font-size:13px;font-weight:bold}
+    button,.btn{padding:9px 14px;background:#1a5276;color:white;border:0;border-radius:7px;cursor:pointer;text-decoration:none;display:inline-block}
+    .danger{background:#b03a2e}
+    .flash{background:#e8f4f8;color:#1a5276;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:13px}
+    .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold;display:inline-block}
+    .high,.open{background:#fde8e8;color:#c0392b}
+    .medium,.pending,.in-progress{background:#fef9e7;color:#d68910}
+    .low,.resolved,.completed,.active{background:#eafaf1;color:#1e8449}
+    .cancelled,.closed,.full{background:#eee;color:#555}
+    .over{background:#fde8e8;color:#c0392b;font-weight:bold;padding:3px 6px;border-radius:5px}
+    @media(max-width:850px){.stat-grid,.grid{grid-template-columns:1fr}}
+    /* LOADER */
+
+#loader{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:white;
+    z-index:99999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.loader-content{
+    text-align:center;
+}
+
+.truck{
+    font-size:60px;
+    animation:moveTruck 2s infinite ease-in-out;
+}
+
+.bin{
+    font-size:60px;
+}
+
+.road{
+    width:250px;
+    height:4px;
+    background:#555;
+    margin:10px auto;
+}
+
+.loader-content p{
+    margin-top:15px;
+    font-weight:bold;
+    color:#1a5276;
+}
+
+@keyframes moveTruck{
+    0%{
+        transform:translateX(-80px);
+    }
+    50%{
+        transform:translateX(80px);
+    }
+    100%{
+        transform:translateX(-80px);
+    }
+}
+  </style>
+</head>
+
+<body>
+  <!-- LOADER -->
+<div id="loader">
+    <div class="loader-content">
+        <div class="truck">🚛</div>
+        <div class="road"></div>
+        <div class="bin">🗑️</div>
+        <p>Loading Smart City Waste Management System...</p>
+    </div>
+</div>
+  <nav>
+    <span class="logo">Smart City Waste</span>
+
+    {% if session.role == 'Admin' %}
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/areas">Areas</a>
+      <a href="/complaints">Complaints</a>
+      <a href="/bins">Waste Bins</a>
+      <a href="/staff">Staff</a>
+      <a href="/reserved-staff">Reserved Staff</a>
+      <a href="/routes">Routes</a>
+      <a href="/schedules">Schedules</a>
+      <a href="/schedule-updates">Schedule Updates</a>
+      <a href="/facilities">Facilities</a>
+      <a href="/collection-records">Collection Records</a>
+      <a href="/reports">Reports</a>
+
+    {% elif session.role == 'Citizen' %}
+      <a href="/citizen/dashboard">My Complaints</a>
+
+    {% elif session.role in ['Driver','Collector','Worker'] %}
+      <a href="/worker/dashboard">My Dashboard</a>
+      <a href="/schedule-updates">Schedule Updates</a>
+
+    {% elif session.role == 'Supervisor' %}
+      <a href="/worker/dashboard">My Dashboard</a>
+    {% endif %}
+
+    <span class="role-pill">{{ session.username }} | {{ session.role }}</span>
+    <a href="/logout">Logout</a>
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+  <script>
+
+window.addEventListener('load', function () {
+
+    document.getElementById('loader').style.display = 'none';
+
+});
+
+document.addEventListener('submit', function () {
+
+    document.getElementById('loader').style.display = 'flex';
+
+});
+
+</script>
+</body>
+</html>
